@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Header from './components/Header';
 import KrishnaMotionScene from './components/KrishnaMotionScene';
 import { HERO_IMAGES } from './constants/heroImages';
@@ -120,6 +121,7 @@ export default function App() {
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
       />
+      <Analytics />
     </div>
   );
 }
