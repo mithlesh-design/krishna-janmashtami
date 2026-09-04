@@ -43,7 +43,8 @@ export default function MusicPlayer({
   currentIndex = 0,
   onSelectTrack,
   isPlaying,
-  setIsPlaying
+  setIsPlaying,
+  isCompact = false
 }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -319,22 +320,24 @@ export default function MusicPlayer({
       />
 
       {/* Dedicated Liquid-Glass Player Container */}
-      <div className="glass-player-container rounded-3xl p-4 sm:p-5 space-y-3 text-left relative overflow-hidden">
+      <div className={`glass-player-container text-left relative overflow-hidden transition-all ${
+        isCompact ? 'rounded-2xl p-2.5 sm:p-3 space-y-2' : 'rounded-3xl p-4 sm:p-5 space-y-3'
+      }`}>
 
         {/* Header Badges & View Toggles */}
-        <div className="flex items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-[#F4B942] font-semibold flex items-center gap-1.5">
-              <YoutubeIcon className="w-3.5 h-3.5 text-red-500 shrink-0" />
-              <span>कृष्ण भजन • {currentIndex + 1}/{tracks.length}</span>
+        <div className="flex items-center justify-between gap-1.5 text-xs">
+          <div className="flex items-center gap-1.5 truncate">
+            <span className={`${isCompact ? 'text-[9px]' : 'text-[10px] sm:text-[11px]'} uppercase font-mono tracking-wider text-[#F4B942] font-semibold flex items-center gap-1 truncate`}>
+              <YoutubeIcon className={`${isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-red-500 shrink-0`} />
+              <span className="truncate">कृष्ण भजन • {currentIndex + 1}/{tracks.length}</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 shrink-0">
             {/* Toggle Video / Audio View */}
             <button
               onClick={() => setShowVideo(!showVideo)}
-              className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
+              className={`flex items-center gap-1 ${isCompact ? 'text-[10px] px-2 py-0.5' : 'text-[11px] px-2.5 py-1'} rounded-full border transition-all cursor-pointer ${
                 showVideo
                   ? 'bg-[#F4B942]/25 border-[#F4B942]/60 text-[#FDE68A] font-medium'
                   : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/70 border-white/10 hover:text-[#FFF5DF]'
@@ -343,13 +346,13 @@ export default function MusicPlayer({
             >
               {showVideo ? (
                 <>
-                  <Headphones className="w-3 h-3 text-[#F4B942]" />
-                  <span>Audio View</span>
+                  <Headphones className={isCompact ? 'w-2.5 h-2.5 text-[#F4B942]' : 'w-3 h-3 text-[#F4B942]'} />
+                  <span>Audio</span>
                 </>
               ) : (
                 <>
-                  <Tv className="w-3 h-3 text-[#F4B942]" />
-                  <span>Video View</span>
+                  <Tv className={isCompact ? 'w-2.5 h-2.5 text-[#F4B942]' : 'w-3 h-3 text-[#F4B942]'} />
+                  <span>Video</span>
                 </>
               )}
             </button>
@@ -357,11 +360,11 @@ export default function MusicPlayer({
             {/* All Songs / Playlist Toggle */}
             <button
               onClick={() => setShowTrackList(!showTrackList)}
-              className="flex items-center gap-1 text-[11px] text-[#FDE68A]/90 hover:text-[#FFF5DF] bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-full border border-white/10 transition-colors cursor-pointer"
-              title="View All 27 Songs"
+              className={`flex items-center gap-1 ${isCompact ? 'text-[10px] px-2 py-0.5' : 'text-[11px] px-2.5 py-1'} text-[#FDE68A]/90 hover:text-[#FFF5DF] bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors cursor-pointer`}
+              title="View All Songs"
             >
-              <ListMusic className="w-3 h-3 text-[#F4B942]" />
-              <span>{showTrackList ? 'Hide' : '27 Songs'}</span>
+              <ListMusic className={isCompact ? 'w-2.5 h-2.5 text-[#F4B942]' : 'w-3 h-3 text-[#F4B942]'} />
+              <span>{showTrackList ? 'Hide' : `${tracks.length} Songs`}</span>
             </button>
 
             {/* Direct Link to YouTube Playlist */}
@@ -373,7 +376,7 @@ export default function MusicPlayer({
               title="Open full playlist on YouTube"
               aria-label="Open full playlist on YouTube"
             >
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className={isCompact ? 'w-2.5 h-2.5' : 'w-3 h-3'} />
             </a>
           </div>
         </div>
@@ -382,7 +385,7 @@ export default function MusicPlayer({
         <div
           className={
             showVideo
-              ? 'w-full aspect-video rounded-2xl overflow-hidden mt-2 mb-1 border border-[#F4B942]/30 shadow-lg bg-black transition-all'
+              ? 'w-full aspect-video rounded-xl overflow-hidden mt-1.5 mb-1 border border-[#F4B942]/30 shadow-lg bg-black transition-all'
               : 'absolute -left-[9999px] top-0 w-1 h-1 opacity-0 pointer-events-none'
           }
         >
@@ -390,9 +393,9 @@ export default function MusicPlayer({
         </div>
 
         {/* Track Info & Artwork Row (Displayed when showVideo is false or minimized) */}
-        <div className="flex items-center gap-3.5">
+        <div className={`flex items-center ${isCompact ? 'gap-2.5' : 'gap-3.5'}`}>
           {/* Mini Album Cover with Pulsing Glow & YouTube Thumbnail */}
-          <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden shrink-0 border border-[#F4B942]/40 bg-[#07182E] shadow-md group">
+          <div className={`relative ${isCompact ? 'w-11 h-11 rounded-xl' : 'w-14 h-14 sm:w-16 sm:h-16 rounded-2xl'} overflow-hidden shrink-0 border border-[#F4B942]/40 bg-[#07182E] shadow-md group`}>
             <img
               src={currentTrack.coverImage || `/images/krishna-${((currentIndex % 6) + 1)}.png`}
               alt={currentTrack.title}
@@ -406,7 +409,7 @@ export default function MusicPlayer({
             {isPlaying && (
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                 {/* Live Equalizer Wave Animation */}
-                <div className="flex items-end gap-0.5 h-4">
+                <div className={`flex items-end gap-0.5 ${isCompact ? 'h-3' : 'h-4'}`}>
                   <span className="w-1 bg-[#F4B942] rounded-full animate-[divine-pulse_0.8s_infinite] h-full" />
                   <span className="w-1 bg-[#FFF5DF] rounded-full animate-[divine-pulse_1s_infinite_0.2s] h-3/4" />
                   <span className="w-1 bg-[#E879A9] rounded-full animate-[divine-pulse_0.6s_infinite_0.4s] h-2/3" />
@@ -417,18 +420,18 @@ export default function MusicPlayer({
 
           {/* Title & Artist */}
           <div className="overflow-hidden flex-1">
-            <h4 className="font-serif-dev text-base sm:text-lg font-bold text-[#FFF5DF] truncate mt-0.5" title={currentTrack.title}>
+            <h4 className={`font-serif-dev ${isCompact ? 'text-sm' : 'text-base sm:text-lg'} font-bold text-[#FFF5DF] truncate`} title={currentTrack.title}>
               {currentTrack.title}
             </h4>
-            <p className="text-xs text-[#FDE68A]/85 truncate font-normal" title={currentTrack.artist}>
+            <p className={`${isCompact ? 'text-[11px]' : 'text-xs'} text-[#FDE68A]/85 truncate font-normal`} title={currentTrack.artist}>
               {currentTrack.artist}
             </p>
           </div>
         </div>
 
-        {/* Collapsible Playlist Selector (Displays all 27 tracks) */}
+        {/* Collapsible Playlist Selector (Displays all tracks) */}
         {showTrackList && (
-          <div className="mt-2 pt-2 border-t border-white/10 max-h-52 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+          <div className={`mt-1.5 pt-1.5 border-t border-white/10 ${isCompact ? 'max-h-36' : 'max-h-52'} overflow-y-auto space-y-1 pr-1 custom-scrollbar`}>
             {tracks.map((t, idx) => (
               <button
                 key={t.id || idx}
@@ -436,27 +439,27 @@ export default function MusicPlayer({
                   if (onSelectTrack) onSelectTrack(idx);
                   setIsPlaying(true);
                 }}
-                className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                className={`w-full flex items-center justify-between p-1.5 rounded-lg text-left text-xs transition-all cursor-pointer ${
                   idx === currentIndex
                     ? 'bg-[#123A68]/80 text-[#FDE68A] font-semibold border border-[#F4B942]/40'
                     : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/80 hover:text-[#FFF5DF]'
                 }`}
               >
-                <div className="flex items-center gap-2 truncate">
-                  <span className="text-[10px] font-mono text-[#F4B942]/80 w-5 shrink-0">{idx + 1}.</span>
+                <div className="flex items-center gap-1.5 truncate">
+                  <span className="text-[10px] font-mono text-[#F4B942]/80 w-4 shrink-0">{idx + 1}.</span>
                   <div className="truncate">
-                    <div className="truncate font-medium">{t.title}</div>
-                    <div className="text-[10px] text-[#FFF5DF]/50 truncate">{t.artist}</div>
+                    <div className="truncate font-medium text-[11px]">{t.title}</div>
+                    <div className="text-[9px] text-[#FFF5DF]/50 truncate">{t.artist}</div>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono text-[#FFF5DF]/50 shrink-0 ml-2">{t.duration}</span>
+                <span className="text-[9px] font-mono text-[#FFF5DF]/50 shrink-0 ml-1">{t.duration}</span>
               </button>
             ))}
           </div>
         )}
 
         {/* Progress Bar & Timestamps */}
-        <div className="mt-2 space-y-1">
+        <div className={`${isCompact ? 'mt-1 space-y-0.5' : 'mt-2 space-y-1'}`}>
           <input
             ref={progressBarRef}
             type="range"
@@ -465,7 +468,7 @@ export default function MusicPlayer({
             value={currentTime}
             onChange={handleSeek}
             aria-label="Seek track"
-            className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942] hover:h-2 transition-all focus:outline-none"
+            className={`w-full ${isCompact ? 'h-1' : 'h-1.5'} bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942] hover:h-2 transition-all focus:outline-none`}
             style={{
               background: `linear-gradient(to right, #F4B942 ${
                 duration ? (currentTime / duration) * 100 : 0
@@ -474,86 +477,92 @@ export default function MusicPlayer({
               }%)`,
             }}
           />
-          <div className="flex justify-between text-[11px] font-mono text-[#FFF5DF]/60">
+          <div className={`flex justify-between ${isCompact ? 'text-[9px]' : 'text-[11px]'} font-mono text-[#FFF5DF]/60`}>
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration || 0)}</span>
           </div>
         </div>
 
         {/* Main Audio Controls Row */}
-        <div className="flex items-center justify-between mt-1 pt-1">
+        <div className={`flex items-center justify-between ${isCompact ? 'mt-0.5 pt-0.5' : 'mt-1 pt-1'}`}>
           {/* Shuffle */}
           <button
             onClick={() => setIsShuffle(!isShuffle)}
-            className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+            className={`p-1 rounded-full transition-colors cursor-pointer ${
               isShuffle ? 'text-[#F4B942] bg-[#F4B942]/20' : 'text-[#FFF5DF]/50 hover:text-[#FFF5DF]'
             }`}
             title="Shuffle"
             aria-label="Shuffle"
           >
-            <Shuffle className="w-3.5 h-3.5" />
+            <Shuffle className={isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
           </button>
 
           {/* Previous */}
           <button
             onClick={playPrev}
-            className="p-2 rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90"
+            className={`${isCompact ? 'p-1.5' : 'p-2'} rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90`}
             aria-label="Previous track"
             title="Previous"
           >
-            <SkipBack className="w-4 h-4 fill-current" />
+            <SkipBack className={`${isCompact ? 'w-3.5 h-3.5' : 'w-4 h-4'} fill-current`} />
           </button>
 
           {/* Big Play / Pause */}
           <button
             onClick={togglePlay}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-[#FDE68A] via-[#F4B942] to-[#E5A93C] text-[#07182E] flex items-center justify-center shadow-[0_0_20px_rgba(244,185,66,0.6)] hover:brightness-110 transition-all cursor-pointer active:scale-95"
+            className={`${
+              isCompact ? 'w-9 h-9' : 'w-11 h-11 sm:w-12 sm:h-12'
+            } rounded-full bg-gradient-to-tr from-[#FDE68A] via-[#F4B942] to-[#E5A93C] text-[#07182E] flex items-center justify-center shadow-[0_0_15px_rgba(244,185,66,0.6)] hover:brightness-110 transition-all cursor-pointer active:scale-95`}
             aria-label={isPlaying ? 'Pause' : 'Play'}
             title={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? (
-              <Pause className="w-5 h-5 fill-[#07182E]" />
+              <Pause className={`${isCompact ? 'w-4 h-4' : 'w-5 h-5'} fill-[#07182E]`} />
             ) : (
-              <Play className="w-5 h-5 fill-[#07182E] ml-0.5" />
+              <Play className={`${isCompact ? 'w-4 h-4 ml-0.5' : 'w-5 h-5 ml-0.5'} fill-[#07182E]`} />
             )}
           </button>
 
           {/* Next */}
           <button
             onClick={playNext}
-            className="p-2 rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90"
+            className={`${isCompact ? 'p-1.5' : 'p-2'} rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90`}
             aria-label="Next track"
             title="Next"
           >
-            <SkipForward className="w-4 h-4 fill-current" />
+            <SkipForward className={`${isCompact ? 'w-3.5 h-3.5' : 'w-4 h-4'} fill-current`} />
           </button>
 
           {/* Repeat */}
           <button
             onClick={cycleRepeat}
-            className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+            className={`p-1 rounded-full transition-colors cursor-pointer ${
               repeatMode !== 'off' ? 'text-[#F4B942] bg-[#F4B942]/20' : 'text-[#FFF5DF]/50 hover:text-[#FFF5DF]'
             }`}
             title={`Repeat: ${repeatMode}`}
             aria-label="Repeat"
           >
-            {repeatMode === 'one' ? <Repeat1 className="w-3.5 h-3.5" /> : <Repeat className="w-3.5 h-3.5" />}
+            {repeatMode === 'one' ? (
+              <Repeat1 className={isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
+            ) : (
+              <Repeat className={isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
+            )}
           </button>
         </div>
 
         {/* Volume Bar & YouTube Status */}
-        <div className="flex items-center gap-2.5 mt-2 pt-2 border-t border-white/5">
+        <div className={`flex items-center gap-2 ${isCompact ? 'mt-1 pt-1' : 'mt-2 pt-2'} border-t border-white/5`}>
           <button
             onClick={() => setIsMuted(!isMuted)}
             className="text-[#FFF5DF]/60 hover:text-[#F4B942] transition-colors cursor-pointer"
             aria-label={isMuted ? 'Unmute' : 'Mute'}
           >
             {isMuted || volume === 0 ? (
-              <VolumeX className="w-3.5 h-3.5" />
+              <VolumeX className="w-3 h-3" />
             ) : volume < 0.5 ? (
-              <Volume1 className="w-3.5 h-3.5" />
+              <Volume1 className="w-3 h-3" />
             ) : (
-              <Volume2 className="w-3.5 h-3.5" />
+              <Volume2 className="w-3 h-3" />
             )}
           </button>
           <input
@@ -567,13 +576,13 @@ export default function MusicPlayer({
               if (isMuted) setIsMuted(false);
             }}
             aria-label="Volume slider"
-            className="w-20 sm:w-24 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942]"
+            className={`${isCompact ? 'w-16 sm:w-20' : 'w-20 sm:w-24'} h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942]`}
           />
-          <span className="text-[10px] font-mono text-[#FFF5DF]/50">
-            {isMuted ? 'Muted' : `${Math.round(volume * 100)}%`}
+          <span className="text-[9px] font-mono text-[#FFF5DF]/50">
+            {isMuted ? '0%' : `${Math.round(volume * 100)}%`}
           </span>
 
-          <span className="text-[10px] text-[#FDE68A]/70 font-serif-dev ml-auto truncate flex items-center gap-1">
+          <span className="text-[9px] text-[#FDE68A]/70 font-serif-dev ml-auto truncate flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>लाइव भजन रस</span>
           </span>
