@@ -54,39 +54,40 @@ export default function Hero({
   };
 
   return (
-    <section className="relative min-h-[100dvh] lg:min-h-screen w-full flex flex-col justify-between lg:flex-row lg:items-center lg:justify-center pt-16 pb-4 sm:pt-20 sm:pb-6 lg:pt-24 lg:pb-12 px-3 sm:px-6 lg:px-16 z-10 select-none">
+    <section className="relative min-h-[100dvh] lg:min-h-screen w-full flex flex-col justify-between lg:flex-row lg:items-center lg:justify-center pt-20 pb-4 sm:pt-22 sm:pb-6 lg:pt-24 lg:pb-12 px-3 sm:px-6 lg:px-16 z-10 select-none">
       
       {/* =========================================================================
           1. MOBILE EXPERIENCE (< 1024px)
           - Krishna image is in the background (no box/card container)
           - Greeting placed high at the top (under header, over sky/arch area)
           - Lord Krishna's face, smile, and form are 100% CLEAR and unobstructed
+          - High-contrast, radiant white-to-gold typography with clean subtle shadow
           - Minimal compact music player strip docked at the bottom
           - Image-switching carousel controls completely removed on mobile
           ========================================================================= */}
       {!isDesktop ? (
-        <div className="flex flex-col justify-between h-full min-h-[calc(100dvh-5.5rem)] w-full max-w-sm sm:max-w-md mx-auto">
+        <div className="flex flex-col justify-between h-full min-h-[calc(100dvh-6rem)] w-full max-w-sm sm:max-w-md mx-auto">
           
           {/* A. TOP GREETING (Positioned high up in the sky/garland area, away from Krishna's face) */}
-          <div className="text-center space-y-1 w-full px-2 pt-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-white/15 bg-[#07182E]/40 backdrop-blur-sm shadow-sm">
-              <Sparkles className="w-3 h-3 text-[#F4B942]" />
-              <span className="text-[11px] font-semibold text-[#FDE68A] font-serif-dev tracking-wide">
+          <div className="text-center space-y-1.5 w-full px-3 pt-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-[#F4B942]/30 bg-[#07182E]/65 backdrop-blur-md shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#F4B942]" />
+              <span className="text-[11px] font-bold text-[#FDE68A] font-serif-dev tracking-wider">
                 श्री कृष्ण जन्माष्टमी
               </span>
             </div>
             
-            <h1 className="devanagari-hero-title text-2xl sm:text-3xl font-bold gold-gradient-text tracking-tight hero-text-shadow leading-snug pt-0.5">
+            <h1 className="mobile-hero-title text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-snug pt-0.5">
               Happy Krishna Janmashtami
             </h1>
             
-            <p className="devanagari-text text-xs sm:text-sm text-[#FDE68A]/90 font-medium hero-text-shadow -mt-1">
+            <p className="devanagari-text text-xs sm:text-sm text-[#FDE68A] font-semibold tracking-wide drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] -mt-0.5">
               नंद के आनंद भयो, जय कन्हैया लाल की! 🍯✨
             </p>
           </div>
 
           {/* B. MIDDLE OPEN CLEARANCE: Lord Krishna's Face, Crown, & Darshan 100% Unobstructed */}
-          <div className="flex-1 w-full min-h-[44vh] sm:min-h-[48vh] pointer-events-none" />
+          <div className="flex-1 w-full min-h-[42vh] sm:min-h-[46vh] pointer-events-none" />
 
           {/* C. BOTTOM MINIMAL MUSIC PLAYER STRIP */}
           <div className="w-full mx-auto pb-1 px-1">

@@ -16,8 +16,8 @@ export default function Header({ onOpenShare, onOpenDonate }) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'backdrop-blur-md bg-[#07182E]/75 border-b border-[#F4B942]/15 py-3.5 shadow-[0_10px_30px_rgba(7,24,46,0.6)]'
-          : 'bg-transparent py-5'
+          ? 'backdrop-blur-md bg-[#07182E]/80 border-b border-[#F4B942]/15 py-2.5 sm:py-3.5 shadow-[0_10px_30px_rgba(7,24,46,0.6)]'
+          : 'bg-transparent py-3.5 sm:py-5'
       }`}
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between">

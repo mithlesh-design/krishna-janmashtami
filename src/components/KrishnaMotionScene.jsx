@@ -260,9 +260,9 @@ export default function KrishnaMotionScene({ activeImageIndex = 0 }) {
           );
         })}
 
-        {/* Subtle, minimal vignettes on mobile to keep Krishna image as the clear main focus */}
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#07182E]/60 via-[#07182E]/20 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#07182E]/70 to-transparent pointer-events-none" />
+        {/* Subtle, soft top contrast gradient providing proper contrast for greeting text while leaving Krishna 100% clear */}
+        <div className="absolute top-0 left-0 right-0 h-48 sm:h-56 bg-gradient-to-b from-[#07182E]/90 via-[#07182E]/55 via-[#07182E]/20 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#07182E]/75 to-transparent pointer-events-none" />
       </div>
 
       {/* 2B. Complete Desktop Hero Coverage with the 6 Images & Smooth Crossfade */}
