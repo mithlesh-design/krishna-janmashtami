@@ -254,21 +254,15 @@ export default function KrishnaMotionScene({ activeImageIndex = 0 }) {
               <img
                 src={img.src}
                 alt={img.title}
-                className="w-full h-full object-cover object-top filter brightness-[0.92] contrast-[1.03]"
+                className="w-full h-full object-cover object-center filter brightness-[0.95] contrast-[1.02]"
               />
             </div>
           );
         })}
 
-        {/* Natural Mobile Gradient Fades: Fades image into deep background where text & player appear */}
-        {/* Top protection for Header */}
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#07182E]/90 to-transparent pointer-events-none" />
-
-        {/* Natural downward fade where Krishna image transitions smoothly into dark background */}
-        <div className="absolute top-[34%] bottom-0 left-0 right-0 bg-gradient-to-b from-transparent via-[#07182E]/85 to-[#07182E] pointer-events-none" />
-
-        {/* Solid base grounding for bottom player and content */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-[#07182E]/95 pointer-events-none" />
+        {/* Subtle, minimal vignettes on mobile to keep Krishna image as the clear main focus */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#07182E]/60 via-[#07182E]/20 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#07182E]/70 to-transparent pointer-events-none" />
       </div>
 
       {/* 2B. Complete Desktop Hero Coverage with the 6 Images & Smooth Crossfade */}
@@ -315,9 +309,9 @@ export default function KrishnaMotionScene({ activeImageIndex = 0 }) {
         />
       </div>
 
-      {/* 4. Divine Golden Aura Pulse */}
+      {/* 4. Divine Golden Aura Pulse (Desktop only) */}
       <div
-        className="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none animate-divine-pulse"
+        className="hidden lg:block absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none animate-divine-pulse"
         style={{
           background: 'radial-gradient(circle, rgba(244, 185, 66, 0.22) 0%, rgba(232, 121, 169, 0.06) 45%, transparent 70%)',
         }}

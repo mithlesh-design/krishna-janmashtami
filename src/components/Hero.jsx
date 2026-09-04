@@ -54,48 +54,42 @@ export default function Hero({
   };
 
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center pt-20 pb-16 lg:pt-24 lg:pb-12 px-4 sm:px-8 lg:px-16 z-10 select-none">
+    <section className="relative min-h-[100dvh] lg:min-h-screen w-full flex flex-col justify-between lg:flex-row lg:items-center lg:justify-center pt-16 pb-4 sm:pt-20 sm:pb-6 lg:pt-24 lg:pb-12 px-3 sm:px-6 lg:px-16 z-10 select-none">
       
       {/* =========================================================================
           1. MOBILE EXPERIENCE (< 1024px)
           - Krishna image is in the background (no box/card container)
-          - Text appears over the natural gradient/faded area of the background image
-          - Music player sits directly below
-          - Handshot / darshan tab is small, compact, and sleek
+          - Greeting placed high at the top (under header, over sky/arch area)
+          - Lord Krishna's face, smile, and form are 100% CLEAR and unobstructed
+          - Minimal compact music player strip docked at the bottom
+          - Image-switching carousel controls completely removed on mobile
           ========================================================================= */}
       {!isDesktop ? (
-        <div className="flex flex-col items-center justify-end w-full max-w-sm sm:max-w-md mx-auto space-y-3 pt-32 sm:pt-40 pb-6 px-1">
+        <div className="flex flex-col justify-between h-full min-h-[calc(100dvh-5.5rem)] w-full max-w-sm sm:max-w-md mx-auto">
           
-          {/* A. TEXT OVER NATURAL GRADIENT / FADED AREA (Clear, readable with subtle text shadow, no box) */}
-          <div className="text-center space-y-1 w-full px-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md shadow-md">
+          {/* A. TOP GREETING (Positioned high up in the sky/garland area, away from Krishna's face) */}
+          <div className="text-center space-y-1 w-full px-2 pt-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-white/15 bg-[#07182E]/40 backdrop-blur-sm shadow-sm">
               <Sparkles className="w-3 h-3 text-[#F4B942]" />
               <span className="text-[11px] font-semibold text-[#FDE68A] font-serif-dev tracking-wide">
                 श्री कृष्ण जन्माष्टमी
               </span>
             </div>
             
-            <h1 className="devanagari-hero-title text-3xl sm:text-4xl font-bold gold-gradient-text tracking-tight hero-text-shadow pt-0.5">
+            <h1 className="devanagari-hero-title text-2xl sm:text-3xl font-bold gold-gradient-text tracking-tight hero-text-shadow leading-snug pt-0.5">
               Happy Krishna Janmashtami
             </h1>
             
-            <p className="devanagari-text text-sm sm:text-base text-[#FDE68A] font-medium hero-text-shadow">
+            <p className="devanagari-text text-xs sm:text-sm text-[#FDE68A]/90 font-medium hero-text-shadow -mt-1">
               नंद के आनंद भयो, जय कन्हैया लाल की! 🍯✨
             </p>
-
-            {/* Rotating Devotional Couplet with subtle shadow */}
-            <div className="min-h-[24px] flex items-center justify-center pt-0.5">
-              <p
-                key={rotatingIndex}
-                className="devanagari-text text-xs sm:text-sm text-[#FFF5DF] font-medium tracking-wide hero-text-shadow transition-all duration-500 animate-[shimmer-gold_0.8s_ease-out]"
-              >
-                {ROTATING_DEVOTIONAL_LINES[rotatingIndex]}
-              </p>
-            </div>
           </div>
 
-          {/* B. COMPACT MUSIC PLAYER DIRECTLY BELOW */}
-          <div className="w-full mx-auto pt-0.5">
+          {/* B. MIDDLE OPEN CLEARANCE: Lord Krishna's Face, Crown, & Darshan 100% Unobstructed */}
+          <div className="flex-1 w-full min-h-[44vh] sm:min-h-[48vh] pointer-events-none" />
+
+          {/* C. BOTTOM MINIMAL MUSIC PLAYER STRIP */}
+          <div className="w-full mx-auto pb-1 px-1">
             <MusicPlayer
               tracks={tracks}
               currentIndex={currentTrackIndex}

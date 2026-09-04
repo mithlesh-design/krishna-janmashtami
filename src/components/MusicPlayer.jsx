@@ -319,275 +319,450 @@ export default function MusicPlayer({
         preload="metadata"
       />
 
-      {/* Dedicated Liquid-Glass Player Container */}
-      <div className={`glass-player-container text-left relative overflow-hidden transition-all ${
-        isCompact ? 'rounded-2xl p-2.5 sm:p-3 space-y-2' : 'rounded-3xl p-4 sm:p-5 space-y-3'
-      }`}>
+      {isCompact ? (
+        /* =========================================================================
+            MOBILE: MINIMAL MUSIC PLAYER STRIP
+            Sleek horizontal pill / strip (~48px height) with all controls & collapsible drawers
+            ========================================================================= */
+        <div className="w-full relative z-20">
+          
+          {/* A. Collapsible Track List Drawer (Smoothly opens upward above the strip) */}
+          {showTrackList && (
+            <div className="mb-2 p-2 rounded-2xl bg-[#07182E]/95 backdrop-blur-2xl border border-white/20 shadow-2xl max-h-56 overflow-y-auto space-y-1 custom-scrollbar text-left">
+              <div className="flex items-center justify-between px-2 py-1 border-b border-white/10 text-[11px] text-[#FDE68A] font-semibold">
+                <span>कृष्ण भजन रस • {tracks.length} Songs</span>
+                <button
+                  onClick={() => setShowTrackList(false)}
+                  className="text-white/60 hover:text-white text-[10px] px-1 py-0.5 rounded cursor-pointer"
+                >
+                  बंद करें ✕
+                </button>
+              </div>
+              {tracks.map((t, idx) => (
+                <button
+                  key={t.id || idx}
+                  onClick={() => {
+                    if (onSelectTrack) onSelectTrack(idx);
+                    setIsPlaying(true);
+                  }}
+                  className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                    idx === currentIndex
+                      ? 'bg-[#123A68]/90 text-[#FDE68A] font-semibold border border-[#F4B942]/40 shadow-sm'
+                      : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/80 hover:text-[#FFF5DF]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <span className="text-[10px] font-mono text-[#F4B942] w-4 shrink-0">{idx + 1}.</span>
+                    <div className="truncate">
+                      <div className="truncate font-medium text-[11px]">{t.title}</div>
+                      <div className="text-[9px] text-[#FFF5DF]/50 truncate">{t.artist}</div>
+                    </div>
+                  </div>
+                  <span className="text-[9px] font-mono text-[#FFF5DF]/50 shrink-0 ml-1">{t.duration}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
-        {/* Header Badges & View Toggles */}
-        <div className="flex items-center justify-between gap-1.5 text-xs">
-          <div className="flex items-center gap-1.5 truncate">
-            <span className={`${isCompact ? 'text-[9px]' : 'text-[10px] sm:text-[11px]'} uppercase font-mono tracking-wider text-[#F4B942] font-semibold flex items-center gap-1 truncate`}>
-              <YoutubeIcon className={`${isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-red-500 shrink-0`} />
-              <span className="truncate">कृष्ण भजन • {currentIndex + 1}/{tracks.length}</span>
-            </span>
+          {/* B. Collapsible Video Window (Smoothly opens upward above the strip) */}
+          {showVideo && (
+            <div className="mb-2 w-full aspect-video rounded-2xl overflow-hidden border border-[#F4B942]/40 shadow-2xl bg-black">
+              <div id="yt-player-embed" className="w-full h-full" />
+            </div>
+          )}
+          {!showVideo && (
+            <div className="absolute -left-[9999px] top-0 w-1 h-1 opacity-0 pointer-events-none">
+              <div id="yt-player-embed" className="w-full h-full" />
+            </div>
+          )}
+
+          {/* C. The Slim Minimal Music Player Strip */}
+          <div className="relative rounded-full bg-[#07182E]/90 backdrop-blur-2xl border border-white/20 px-2.5 py-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.75)] flex items-center justify-between gap-2 overflow-hidden">
+            
+            {/* Integrated Thin 2px Seeker Line along bottom of strip */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white/10 overflow-hidden cursor-pointer"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const newRatio = Math.max(0, Math.min(1, clickX / rect.width));
+                if (duration) {
+                  const newTime = newRatio * duration;
+                  setCurrentTime(newTime);
+                  if (ytPlayerRef.current && typeof ytPlayerRef.current.seekTo === 'function') {
+                    ytPlayerRef.current.seekTo(newTime, true);
+                  } else if (audioRef.current) {
+                    audioRef.current.currentTime = newTime;
+                  }
+                }
+              }}
+            >
+              <div
+                className="h-full bg-gradient-to-r from-[#F4B942] to-[#FDE68A] transition-all duration-200"
+                style={{
+                  width: `${duration ? (currentTime / duration) * 100 : 0}%`,
+                }}
+              />
+            </div>
+
+            {/* Left: Mini Circular Cover & Title */}
+            <div className="flex items-center gap-2 overflow-hidden flex-1 min-w-0">
+              <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-[#F4B942]/60 shadow-sm bg-black">
+                <img
+                  src={currentTrack.coverImage || `/images/krishna-${((currentIndex % 6) + 1)}.png`}
+                  alt={currentTrack.title}
+                  onError={(e) => {
+                    e.target.src = `/images/krishna-${((currentIndex % 6) + 1)}.png`;
+                  }}
+                  className={`w-full h-full object-cover ${isPlaying ? 'animate-[spin_8s_linear_infinite]' : ''}`}
+                />
+                {isPlaying && (
+                  <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F4B942] animate-ping" />
+                  </div>
+                )}
+              </div>
+
+              <div className="truncate flex-1 min-w-0 text-left">
+                <h4 className="font-serif-dev text-xs font-bold text-[#FFF5DF] truncate leading-tight" title={currentTrack.title}>
+                  {currentTrack.title}
+                </h4>
+                <p className="text-[10px] text-[#FDE68A]/80 truncate leading-tight font-sans">
+                  {currentTrack.artist}
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Essential Compact Controls */}
+            <div className="flex items-center gap-1 shrink-0">
+              {/* Prev */}
+              <button
+                onClick={playPrev}
+                className="p-1 text-[#FFF5DF]/70 hover:text-white transition-colors active:scale-90 cursor-pointer"
+                aria-label="Previous track"
+              >
+                <SkipBack className="w-3.5 h-3.5 fill-current" />
+              </button>
+
+              {/* Play / Pause */}
+              <button
+                onClick={togglePlay}
+                className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#FDE68A] via-[#F4B942] to-[#E5A93C] text-[#07182E] flex items-center justify-center shadow-md active:scale-90 transition-transform cursor-pointer shrink-0"
+                aria-label={isPlaying ? 'Pause' : 'Play'}
+              >
+                {isPlaying ? (
+                  <Pause className="w-3.5 h-3.5 fill-[#07182E]" />
+                ) : (
+                  <Play className="w-3.5 h-3.5 fill-[#07182E] ml-0.5" />
+                )}
+              </button>
+
+              {/* Next */}
+              <button
+                onClick={playNext}
+                className="p-1 text-[#FFF5DF]/70 hover:text-white transition-colors active:scale-90 cursor-pointer"
+                aria-label="Next track"
+              >
+                <SkipForward className="w-3.5 h-3.5 fill-current" />
+              </button>
+
+              {/* Playlist drawer toggle */}
+              <button
+                onClick={() => setShowTrackList(!showTrackList)}
+                className={`p-1 rounded-full transition-colors cursor-pointer ${
+                  showTrackList
+                    ? 'bg-[#F4B942] text-[#07182E]'
+                    : 'text-[#FDE68A] hover:bg-white/10'
+                }`}
+                title="Playlist"
+                aria-label="Playlist"
+              >
+                <ListMusic className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Video toggle */}
+              <button
+                onClick={() => setShowVideo(!showVideo)}
+                className={`p-1 rounded-full transition-colors cursor-pointer ${
+                  showVideo
+                    ? 'bg-[#F4B942] text-[#07182E]'
+                    : 'text-[#FFF5DF]/60 hover:bg-white/10 hover:text-white'
+                }`}
+                title={showVideo ? "Hide Video" : "Show Video"}
+                aria-label="Video"
+              >
+                {showVideo ? <Headphones className="w-3 h-3" /> : <Tv className="w-3 h-3" />}
+              </button>
+            </div>
+
           </div>
 
-          <div className="flex items-center gap-1 shrink-0">
-            {/* Toggle Video / Audio View */}
+        </div>
+      ) : (
+        /* =========================================================================
+            DESKTOP: FULL LIQUID-GLASS CONTAINER (100% Preserved)
+            ========================================================================= */
+        <div className="glass-player-container rounded-3xl p-4 sm:p-5 space-y-3 text-left relative overflow-hidden">
+
+          {/* Header Badges & View Toggles */}
+          <div className="flex items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-[#F4B942] font-semibold flex items-center gap-1.5">
+                <YoutubeIcon className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                <span>कृष्ण भजन • {currentIndex + 1}/{tracks.length}</span>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              {/* Toggle Video / Audio View */}
+              <button
+                onClick={() => setShowVideo(!showVideo)}
+                className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
+                  showVideo
+                    ? 'bg-[#F4B942]/25 border-[#F4B942]/60 text-[#FDE68A] font-medium'
+                    : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/70 border-white/10 hover:text-[#FFF5DF]'
+                }`}
+                title={showVideo ? "Switch to Audio View" : "Watch Devotional Video"}
+              >
+                {showVideo ? (
+                  <>
+                    <Headphones className="w-3 h-3 text-[#F4B942]" />
+                    <span>Audio View</span>
+                  </>
+                ) : (
+                  <>
+                    <Tv className="w-3 h-3 text-[#F4B942]" />
+                    <span>Video View</span>
+                  </>
+                )}
+              </button>
+
+              {/* All Songs / Playlist Toggle */}
+              <button
+                onClick={() => setShowTrackList(!showTrackList)}
+                className="flex items-center gap-1 text-[11px] text-[#FDE68A]/90 hover:text-[#FFF5DF] bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-full border border-white/10 transition-colors cursor-pointer"
+                title="View All 27 Songs"
+              >
+                <ListMusic className="w-3 h-3 text-[#F4B942]" />
+                <span>{showTrackList ? 'Hide' : '27 Songs'}</span>
+              </button>
+
+              {/* Direct Link to YouTube Playlist */}
+              <a
+                href={YOUTUBE_PLAYLIST_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 rounded-full text-[#FFF5DF]/50 hover:text-red-400 hover:bg-white/10 transition-colors"
+                title="Open full playlist on YouTube"
+                aria-label="Open full playlist on YouTube"
+              >
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+          {/* YouTube Embedded Video Window (Revealed in Video View, kept active offscreen in Audio View) */}
+          <div
+            className={
+              showVideo
+                ? 'w-full aspect-video rounded-2xl overflow-hidden mt-2 mb-1 border border-[#F4B942]/30 shadow-lg bg-black transition-all'
+                : 'absolute -left-[9999px] top-0 w-1 h-1 opacity-0 pointer-events-none'
+            }
+          >
+            <div id="yt-player-embed" className="w-full h-full" />
+          </div>
+
+          {/* Track Info & Artwork Row (Displayed when showVideo is false or minimized) */}
+          <div className="flex items-center gap-3.5">
+            {/* Mini Album Cover with Pulsing Glow & YouTube Thumbnail */}
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden shrink-0 border border-[#F4B942]/40 bg-[#07182E] shadow-md group">
+              <img
+                src={currentTrack.coverImage || `/images/krishna-${((currentIndex % 6) + 1)}.png`}
+                alt={currentTrack.title}
+                onError={(e) => {
+                  e.target.src = `/images/krishna-${((currentIndex % 6) + 1)}.png`;
+                }}
+                className={`w-full h-full object-cover transition-transform duration-700 ${
+                  isPlaying ? 'scale-110' : 'scale-100'
+                }`}
+              />
+              {isPlaying && (
+                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                  {/* Live Equalizer Wave Animation */}
+                  <div className="flex items-end gap-0.5 h-4">
+                    <span className="w-1 bg-[#F4B942] rounded-full animate-[divine-pulse_0.8s_infinite] h-full" />
+                    <span className="w-1 bg-[#FFF5DF] rounded-full animate-[divine-pulse_1s_infinite_0.2s] h-3/4" />
+                    <span className="w-1 bg-[#E879A9] rounded-full animate-[divine-pulse_0.6s_infinite_0.4s] h-2/3" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Title & Artist */}
+            <div className="overflow-hidden flex-1">
+              <h4 className="font-serif-dev text-base sm:text-lg font-bold text-[#FFF5DF] truncate mt-0.5" title={currentTrack.title}>
+                {currentTrack.title}
+              </h4>
+              <p className="text-xs text-[#FDE68A]/85 truncate font-normal" title={currentTrack.artist}>
+                {currentTrack.artist}
+              </p>
+            </div>
+          </div>
+
+          {/* Collapsible Playlist Selector (Displays all 27 tracks) */}
+          {showTrackList && (
+            <div className="mt-2 pt-2 border-t border-white/10 max-h-52 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+              {tracks.map((t, idx) => (
+                <button
+                  key={t.id || idx}
+                  onClick={() => {
+                    if (onSelectTrack) onSelectTrack(idx);
+                    setIsPlaying(true);
+                  }}
+                  className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                    idx === currentIndex
+                      ? 'bg-[#123A68]/80 text-[#FDE68A] font-semibold border border-[#F4B942]/40'
+                      : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/80 hover:text-[#FFF5DF]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <span className="text-[10px] font-mono text-[#F4B942]/80 w-5 shrink-0">{idx + 1}.</span>
+                    <div className="truncate">
+                      <div className="truncate font-medium">{t.title}</div>
+                      <div className="text-[10px] text-[#FFF5DF]/50 truncate">{t.artist}</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono text-[#FFF5DF]/50 shrink-0 ml-2">{t.duration}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Progress Bar & Timestamps */}
+          <div className="mt-2 space-y-1">
+            <input
+              ref={progressBarRef}
+              type="range"
+              min="0"
+              max={duration || 100}
+              value={currentTime}
+              onChange={handleSeek}
+              aria-label="Seek track"
+              className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942] hover:h-2 transition-all focus:outline-none"
+              style={{
+                background: `linear-gradient(to right, #F4B942 ${
+                  duration ? (currentTime / duration) * 100 : 0
+                }%, rgba(255,255,255,0.15) ${
+                  duration ? (currentTime / duration) * 100 : 0
+                }%)`,
+              }}
+            />
+            <div className="flex justify-between text-[11px] font-mono text-[#FFF5DF]/60">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration || 0)}</span>
+            </div>
+          </div>
+
+          {/* Main Audio Controls Row */}
+          <div className="flex items-center justify-between mt-1 pt-1">
+            {/* Shuffle */}
             <button
-              onClick={() => setShowVideo(!showVideo)}
-              className={`flex items-center gap-1 ${isCompact ? 'text-[10px] px-2 py-0.5' : 'text-[11px] px-2.5 py-1'} rounded-full border transition-all cursor-pointer ${
-                showVideo
-                  ? 'bg-[#F4B942]/25 border-[#F4B942]/60 text-[#FDE68A] font-medium'
-                  : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/70 border-white/10 hover:text-[#FFF5DF]'
+              onClick={() => setIsShuffle(!isShuffle)}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                isShuffle ? 'text-[#F4B942] bg-[#F4B942]/20' : 'text-[#FFF5DF]/50 hover:text-[#FFF5DF]'
               }`}
-              title={showVideo ? "Switch to Audio View" : "Watch Devotional Video"}
+              title="Shuffle"
+              aria-label="Shuffle"
             >
-              {showVideo ? (
-                <>
-                  <Headphones className={isCompact ? 'w-2.5 h-2.5 text-[#F4B942]' : 'w-3 h-3 text-[#F4B942]'} />
-                  <span>Audio</span>
-                </>
+              <Shuffle className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Previous */}
+            <button
+              onClick={playPrev}
+              className="p-2 rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90"
+              aria-label="Previous track"
+              title="Previous"
+            >
+              <SkipBack className="w-4 h-4 fill-current" />
+            </button>
+
+            {/* Big Play / Pause */}
+            <button
+              onClick={togglePlay}
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-[#FDE68A] via-[#F4B942] to-[#E5A93C] text-[#07182E] flex items-center justify-center shadow-[0_0_20px_rgba(244,185,66,0.6)] hover:brightness-110 transition-all cursor-pointer active:scale-95"
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+              title={isPlaying ? 'Pause' : 'Play'}
+            >
+              {isPlaying ? (
+                <Pause className="w-5 h-5 fill-[#07182E]" />
               ) : (
-                <>
-                  <Tv className={isCompact ? 'w-2.5 h-2.5 text-[#F4B942]' : 'w-3 h-3 text-[#F4B942]'} />
-                  <span>Video</span>
-                </>
+                <Play className="w-5 h-5 fill-[#07182E] ml-0.5" />
               )}
             </button>
 
-            {/* All Songs / Playlist Toggle */}
+            {/* Next */}
             <button
-              onClick={() => setShowTrackList(!showTrackList)}
-              className={`flex items-center gap-1 ${isCompact ? 'text-[10px] px-2 py-0.5' : 'text-[11px] px-2.5 py-1'} text-[#FDE68A]/90 hover:text-[#FFF5DF] bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors cursor-pointer`}
-              title="View All Songs"
+              onClick={playNext}
+              className="p-2 rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90"
+              aria-label="Next track"
+              title="Next"
             >
-              <ListMusic className={isCompact ? 'w-2.5 h-2.5 text-[#F4B942]' : 'w-3 h-3 text-[#F4B942]'} />
-              <span>{showTrackList ? 'Hide' : `${tracks.length} Songs`}</span>
+              <SkipForward className="w-4 h-4 fill-current" />
             </button>
 
-            {/* Direct Link to YouTube Playlist */}
-            <a
-              href={YOUTUBE_PLAYLIST_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1 rounded-full text-[#FFF5DF]/50 hover:text-red-400 hover:bg-white/10 transition-colors"
-              title="Open full playlist on YouTube"
-              aria-label="Open full playlist on YouTube"
-            >
-              <ExternalLink className={isCompact ? 'w-2.5 h-2.5' : 'w-3 h-3'} />
-            </a>
-          </div>
-        </div>
-
-        {/* YouTube Embedded Video Window (Revealed in Video View, kept active offscreen in Audio View) */}
-        <div
-          className={
-            showVideo
-              ? 'w-full aspect-video rounded-xl overflow-hidden mt-1.5 mb-1 border border-[#F4B942]/30 shadow-lg bg-black transition-all'
-              : 'absolute -left-[9999px] top-0 w-1 h-1 opacity-0 pointer-events-none'
-          }
-        >
-          <div id="yt-player-embed" className="w-full h-full" />
-        </div>
-
-        {/* Track Info & Artwork Row (Displayed when showVideo is false or minimized) */}
-        <div className={`flex items-center ${isCompact ? 'gap-2.5' : 'gap-3.5'}`}>
-          {/* Mini Album Cover with Pulsing Glow & YouTube Thumbnail */}
-          <div className={`relative ${isCompact ? 'w-11 h-11 rounded-xl' : 'w-14 h-14 sm:w-16 sm:h-16 rounded-2xl'} overflow-hidden shrink-0 border border-[#F4B942]/40 bg-[#07182E] shadow-md group`}>
-            <img
-              src={currentTrack.coverImage || `/images/krishna-${((currentIndex % 6) + 1)}.png`}
-              alt={currentTrack.title}
-              onError={(e) => {
-                e.target.src = `/images/krishna-${((currentIndex % 6) + 1)}.png`;
-              }}
-              className={`w-full h-full object-cover transition-transform duration-700 ${
-                isPlaying ? 'scale-110' : 'scale-100'
+            {/* Repeat */}
+            <button
+              onClick={cycleRepeat}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                repeatMode !== 'off' ? 'text-[#F4B942] bg-[#F4B942]/20' : 'text-[#FFF5DF]/50 hover:text-[#FFF5DF]'
               }`}
+              title={`Repeat: ${repeatMode}`}
+              aria-label="Repeat"
+            >
+              {repeatMode === 'one' ? <Repeat1 className="w-3.5 h-3.5" /> : <Repeat className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+
+          {/* Volume Bar & YouTube Status */}
+          <div className="flex items-center gap-2.5 mt-2 pt-2 border-t border-white/5">
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="text-[#FFF5DF]/60 hover:text-[#F4B942] transition-colors cursor-pointer"
+              aria-label={isMuted ? 'Unmute' : 'Mute'}
+            >
+              {isMuted || volume === 0 ? (
+                <VolumeX className="w-3.5 h-3.5" />
+              ) : volume < 0.5 ? (
+                <Volume1 className="w-3.5 h-3.5" />
+              ) : (
+                <Volume2 className="w-3.5 h-3.5" />
+              )}
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={isMuted ? 0 : volume}
+              onChange={(e) => {
+                setVolume(parseFloat(e.target.value));
+                if (isMuted) setIsMuted(false);
+              }}
+              aria-label="Volume slider"
+              className="w-20 sm:w-24 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942]"
             />
-            {isPlaying && (
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                {/* Live Equalizer Wave Animation */}
-                <div className={`flex items-end gap-0.5 ${isCompact ? 'h-3' : 'h-4'}`}>
-                  <span className="w-1 bg-[#F4B942] rounded-full animate-[divine-pulse_0.8s_infinite] h-full" />
-                  <span className="w-1 bg-[#FFF5DF] rounded-full animate-[divine-pulse_1s_infinite_0.2s] h-3/4" />
-                  <span className="w-1 bg-[#E879A9] rounded-full animate-[divine-pulse_0.6s_infinite_0.4s] h-2/3" />
-                </div>
-              </div>
-            )}
-          </div>
+            <span className="text-[10px] font-mono text-[#FFF5DF]/50">
+              {isMuted ? 'Muted' : `${Math.round(volume * 100)}%`}
+            </span>
 
-          {/* Title & Artist */}
-          <div className="overflow-hidden flex-1">
-            <h4 className={`font-serif-dev ${isCompact ? 'text-sm' : 'text-base sm:text-lg'} font-bold text-[#FFF5DF] truncate`} title={currentTrack.title}>
-              {currentTrack.title}
-            </h4>
-            <p className={`${isCompact ? 'text-[11px]' : 'text-xs'} text-[#FDE68A]/85 truncate font-normal`} title={currentTrack.artist}>
-              {currentTrack.artist}
-            </p>
+            <span className="text-[10px] text-[#FDE68A]/70 font-serif-dev ml-auto truncate flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>लाइव भजन रस</span>
+            </span>
           </div>
         </div>
-
-        {/* Collapsible Playlist Selector (Displays all tracks) */}
-        {showTrackList && (
-          <div className={`mt-1.5 pt-1.5 border-t border-white/10 ${isCompact ? 'max-h-36' : 'max-h-52'} overflow-y-auto space-y-1 pr-1 custom-scrollbar`}>
-            {tracks.map((t, idx) => (
-              <button
-                key={t.id || idx}
-                onClick={() => {
-                  if (onSelectTrack) onSelectTrack(idx);
-                  setIsPlaying(true);
-                }}
-                className={`w-full flex items-center justify-between p-1.5 rounded-lg text-left text-xs transition-all cursor-pointer ${
-                  idx === currentIndex
-                    ? 'bg-[#123A68]/80 text-[#FDE68A] font-semibold border border-[#F4B942]/40'
-                    : 'bg-white/5 hover:bg-white/10 text-[#FFF5DF]/80 hover:text-[#FFF5DF]'
-                }`}
-              >
-                <div className="flex items-center gap-1.5 truncate">
-                  <span className="text-[10px] font-mono text-[#F4B942]/80 w-4 shrink-0">{idx + 1}.</span>
-                  <div className="truncate">
-                    <div className="truncate font-medium text-[11px]">{t.title}</div>
-                    <div className="text-[9px] text-[#FFF5DF]/50 truncate">{t.artist}</div>
-                  </div>
-                </div>
-                <span className="text-[9px] font-mono text-[#FFF5DF]/50 shrink-0 ml-1">{t.duration}</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Progress Bar & Timestamps */}
-        <div className={`${isCompact ? 'mt-1 space-y-0.5' : 'mt-2 space-y-1'}`}>
-          <input
-            ref={progressBarRef}
-            type="range"
-            min="0"
-            max={duration || 100}
-            value={currentTime}
-            onChange={handleSeek}
-            aria-label="Seek track"
-            className={`w-full ${isCompact ? 'h-1' : 'h-1.5'} bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942] hover:h-2 transition-all focus:outline-none`}
-            style={{
-              background: `linear-gradient(to right, #F4B942 ${
-                duration ? (currentTime / duration) * 100 : 0
-              }%, rgba(255,255,255,0.15) ${
-                duration ? (currentTime / duration) * 100 : 0
-              }%)`,
-            }}
-          />
-          <div className={`flex justify-between ${isCompact ? 'text-[9px]' : 'text-[11px]'} font-mono text-[#FFF5DF]/60`}>
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration || 0)}</span>
-          </div>
-        </div>
-
-        {/* Main Audio Controls Row */}
-        <div className={`flex items-center justify-between ${isCompact ? 'mt-0.5 pt-0.5' : 'mt-1 pt-1'}`}>
-          {/* Shuffle */}
-          <button
-            onClick={() => setIsShuffle(!isShuffle)}
-            className={`p-1 rounded-full transition-colors cursor-pointer ${
-              isShuffle ? 'text-[#F4B942] bg-[#F4B942]/20' : 'text-[#FFF5DF]/50 hover:text-[#FFF5DF]'
-            }`}
-            title="Shuffle"
-            aria-label="Shuffle"
-          >
-            <Shuffle className={isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
-          </button>
-
-          {/* Previous */}
-          <button
-            onClick={playPrev}
-            className={`${isCompact ? 'p-1.5' : 'p-2'} rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90`}
-            aria-label="Previous track"
-            title="Previous"
-          >
-            <SkipBack className={`${isCompact ? 'w-3.5 h-3.5' : 'w-4 h-4'} fill-current`} />
-          </button>
-
-          {/* Big Play / Pause */}
-          <button
-            onClick={togglePlay}
-            className={`${
-              isCompact ? 'w-9 h-9' : 'w-11 h-11 sm:w-12 sm:h-12'
-            } rounded-full bg-gradient-to-tr from-[#FDE68A] via-[#F4B942] to-[#E5A93C] text-[#07182E] flex items-center justify-center shadow-[0_0_15px_rgba(244,185,66,0.6)] hover:brightness-110 transition-all cursor-pointer active:scale-95`}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-            title={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isPlaying ? (
-              <Pause className={`${isCompact ? 'w-4 h-4' : 'w-5 h-5'} fill-[#07182E]`} />
-            ) : (
-              <Play className={`${isCompact ? 'w-4 h-4 ml-0.5' : 'w-5 h-5 ml-0.5'} fill-[#07182E]`} />
-            )}
-          </button>
-
-          {/* Next */}
-          <button
-            onClick={playNext}
-            className={`${isCompact ? 'p-1.5' : 'p-2'} rounded-full text-[#FFF5DF]/80 hover:text-[#FFF5DF] hover:bg-white/10 transition-all cursor-pointer active:scale-90`}
-            aria-label="Next track"
-            title="Next"
-          >
-            <SkipForward className={`${isCompact ? 'w-3.5 h-3.5' : 'w-4 h-4'} fill-current`} />
-          </button>
-
-          {/* Repeat */}
-          <button
-            onClick={cycleRepeat}
-            className={`p-1 rounded-full transition-colors cursor-pointer ${
-              repeatMode !== 'off' ? 'text-[#F4B942] bg-[#F4B942]/20' : 'text-[#FFF5DF]/50 hover:text-[#FFF5DF]'
-            }`}
-            title={`Repeat: ${repeatMode}`}
-            aria-label="Repeat"
-          >
-            {repeatMode === 'one' ? (
-              <Repeat1 className={isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
-            ) : (
-              <Repeat className={isCompact ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
-            )}
-          </button>
-        </div>
-
-        {/* Volume Bar & YouTube Status */}
-        <div className={`flex items-center gap-2 ${isCompact ? 'mt-1 pt-1' : 'mt-2 pt-2'} border-t border-white/5`}>
-          <button
-            onClick={() => setIsMuted(!isMuted)}
-            className="text-[#FFF5DF]/60 hover:text-[#F4B942] transition-colors cursor-pointer"
-            aria-label={isMuted ? 'Unmute' : 'Mute'}
-          >
-            {isMuted || volume === 0 ? (
-              <VolumeX className="w-3 h-3" />
-            ) : volume < 0.5 ? (
-              <Volume1 className="w-3 h-3" />
-            ) : (
-              <Volume2 className="w-3 h-3" />
-            )}
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={isMuted ? 0 : volume}
-            onChange={(e) => {
-              setVolume(parseFloat(e.target.value));
-              if (isMuted) setIsMuted(false);
-            }}
-            aria-label="Volume slider"
-            className={`${isCompact ? 'w-16 sm:w-20' : 'w-20 sm:w-24'} h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#F4B942]`}
-          />
-          <span className="text-[9px] font-mono text-[#FFF5DF]/50">
-            {isMuted ? '0%' : `${Math.round(volume * 100)}%`}
-          </span>
-
-          <span className="text-[9px] text-[#FDE68A]/70 font-serif-dev ml-auto truncate flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>लाइव भजन रस</span>
-          </span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

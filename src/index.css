@@ -137,10 +137,9 @@ body {
   animation: shimmer-gold 8s ease infinite;
 }
 
-/* Subtle, rich text shadow for hero text over background imagery */
+/* Very subtle, soft text shadow for clean readability without harsh dark halos */
 .hero-text-shadow {
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 4px 20px rgba(0, 0, 0, 0.85);
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.95)) drop-shadow(0 4px 20px rgba(7, 24, 46, 0.95));
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 /* Distinct Glass Container for the Player Component */

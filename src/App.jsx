@@ -97,7 +97,7 @@ export default function App() {
       />
 
       {/* 4. The Single Unified Hero Section */}
-      <main className="relative z-10 w-full my-auto">
+      <main className="relative z-10 w-full flex-1 flex flex-col justify-between lg:my-auto">
         <Hero
           activeImageIndex={activeImageIndex}
           onSelectImage={handleSelectImage}
