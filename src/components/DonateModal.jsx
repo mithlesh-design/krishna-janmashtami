@@ -3,7 +3,7 @@ import { X, Copy, Check, QrCode, Sparkles } from 'lucide-react';
 
 export default function DonateModal({ isOpen, onClose }) {
   const [copied, setCopied] = useState(false);
-  const upiId = 'krishna.janmashtami@upi';
+  const upiId = 'jai-sree-krishna@ybl';
 
   useEffect(() => {
     const handleKeyDown = (e) => {
