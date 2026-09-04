@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
-import KrishnaMotionScene, { HERO_IMAGES } from './components/KrishnaMotionScene';
+import KrishnaMotionScene from './components/KrishnaMotionScene';
+import { HERO_IMAGES } from './constants/heroImages';
 import Hero from './components/Hero';
 import DonateModal from './components/DonateModal';
 import ShareModal from './components/ShareModal';

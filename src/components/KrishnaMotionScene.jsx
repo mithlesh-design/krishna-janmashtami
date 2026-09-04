@@ -1,13 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-export const HERO_IMAGES = [
-  { id: 1, src: '/images/krishna-1.png', title: 'माखन चोर कन्हैया', desc: 'सूरज मुखी बाल गोपाल' },
-  { id: 2, src: '/images/krishna-2.png', title: 'संध्या घाट विश्राम', desc: 'यमुना तट पर सुरभि सखा' },
-  { id: 3, src: '/images/krishna-3.png', title: 'मधुर बंशी वादन', desc: 'अधर धरी मुरली प्यारी' },
-  { id: 4, src: '/images/krishna-4.png', title: 'यमुना तीर मुरलीधर', desc: 'गोपीजन वल्लभ रूप' },
-  { id: 5, src: '/images/krishna-5.png', title: 'गोपाल सखा दर्शन', desc: 'मोर मुकुट पीताम्बरधारी' },
-  { id: 6, src: '/images/krishna-6.png', title: 'आनंद कंद बाल रूप', desc: 'नंद नंदन यशोदा दुलारा' },
-];
+import { HERO_IMAGES, HERO_IMAGES_MOBILE } from '../constants/heroImages';
+export { HERO_IMAGES, HERO_IMAGES_MOBILE };
 
 /**
  * KrishnaMotionScene
@@ -246,9 +240,40 @@ export default function KrishnaMotionScene({ activeImageIndex = 0 }) {
       {/* 1. Deep Atmospheric Base */}
       <div className="absolute inset-0 bg-[#07182E]" />
 
-      {/* 2. Complete Hero Coverage with the 6 Images & Smooth Crossfade */}
+      {/* 2A. Mobile Background Coverage with Vertical 9:16 Artworks */}
+      <div className="block lg:hidden absolute inset-0 w-full h-full">
+        {HERO_IMAGES_MOBILE.map((img, idx) => {
+          const isActive = idx === activeImageIndex;
+          return (
+            <div
+              key={img.id}
+              className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
+                isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+              }`}
+            >
+              <img
+                src={img.src}
+                alt={img.title}
+                className="w-full h-full object-cover object-top filter brightness-[0.92] contrast-[1.03]"
+              />
+            </div>
+          );
+        })}
+
+        {/* Natural Mobile Gradient Fades: Fades image into deep background where text & player appear */}
+        {/* Top protection for Header */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#07182E]/90 to-transparent pointer-events-none" />
+
+        {/* Natural downward fade where Krishna image transitions smoothly into dark background */}
+        <div className="absolute top-[34%] bottom-0 left-0 right-0 bg-gradient-to-b from-transparent via-[#07182E]/85 to-[#07182E] pointer-events-none" />
+
+        {/* Solid base grounding for bottom player and content */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-[#07182E]/95 pointer-events-none" />
+      </div>
+
+      {/* 2B. Complete Desktop Hero Coverage with the 6 Images & Smooth Crossfade */}
       <div
-        className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out"
+        className="hidden lg:block absolute inset-0 w-full h-full transition-transform duration-700 ease-out"
         style={{
           transform: `scale(1.02) translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)`,
         }}
