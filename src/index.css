@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+@theme {
+  --color-krishna-dark: #07182E;
+  --color-krishna-royal: #123A68;
+  --color-krishna-deep: #0a2244;
+  --color-krishna-gold: #F4B942;
+  --color-krishna-gold-light: #FDE68A;
+  --color-krishna-cream: #FFF5DF;
+  --color-krishna-lotus: #E879A9;
+  --color-krishna-lotus-light: #FBCFE8;
+  --color-krishna-teal: #14506b;
+
+  --font-serif-dev: 'Noto Serif Devanagari', serif;
+  --font-sans: 'Manrope', sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #07182E;
+  color: #FFF5DF;
+  font-family: 'Manrope', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom delicate scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #07182E;
+}
+::-webkit-scrollbar-thumb {
+  background: #123A68;
+  border-radius: 4px;
+  border: 1px solid rgba(244, 185, 66, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F4B942;
+}
+
+/* Compact playlist scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(7, 24, 46, 0.4);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(244, 185, 66, 0.3);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #F4B942;
+}
+
+/* Animations */
+@keyframes divine-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 25px rgba(244, 185, 66, 0.4));
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+    filter: drop-shadow(0 0 45px rgba(244, 185, 66, 0.75));
+  }
+}
+
+@keyframes mor-pankh-sway {
+  0%, 100% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+  33% {
+    transform: rotate(2.5deg) skewX(1deg);
+  }
+  66% {
+    transform: rotate(-1.8deg) skewX(-0.8deg);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes aura-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer-gold {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-divine-pulse {
+  animation: divine-pulse 6s ease-in-out infinite;
+}
+
+.animate-mor-pankh {
+  animation: mor-pankh-sway 8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.animate-aura-slow {
+  animation: aura-rotate 60s linear infinite;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF5DF 0%, #F4B942 50%, #E5A93C 75%, #FFF5DF 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-gold 8s ease infinite;
+}
+
+/* Distinct Glass Container for the Player Component */
+.glass-player-container {
+  background: rgba(7, 24, 46, 0.45);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.pure-glass-sheet {
+  background: rgba(7, 24, 46, 0.28);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.pure-glass-subtle {
+  background: rgba(7, 24, 46, 0.35);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* Hindi / Devanagari typography helpers to prevent character clipping */
+.devanagari-hero-title {
+  font-family: 'Noto Serif Devanagari', 'Rozha One', serif;
+  line-height: 1.45;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  overflow: visible;
+}
+
+.devanagari-text {
+  font-family: 'Noto Serif Devanagari', serif;
+  line-height: 1.65;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  overflow: visible;
+}
+
+.devanagari-safe {
+  font-family: 'Noto Serif Devanagari', serif;
+  line-height: 1.7;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  overflow: visible;
+  display: block;
+}
+
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
