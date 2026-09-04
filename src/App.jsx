@@ -72,7 +72,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden bg-[#07182E] text-[#FFF5DF] selection:bg-[#F4B942]/30 selection:text-[#FFF5DF] font-sans flex flex-col justify-between">
+    <div className="relative h-[100dvh] w-full overflow-hidden bg-[#07182E] text-[#FFF5DF] selection:bg-[#F4B942]/30 selection:text-[#FFF5DF] font-sans flex flex-col justify-between select-none">
       {/* 1. React Bits Interactive WebGL Splash Cursor Effect */}
       <SplashCursor
         SIM_RESOLUTION={128}
@@ -98,7 +98,7 @@ export default function App() {
       />
 
       {/* 4. The Single Unified Hero Section */}
-      <main className="relative z-10 w-full flex-1 flex flex-col justify-between lg:my-auto">
+      <main className="relative z-10 w-full h-full flex-1 flex flex-col justify-between overflow-hidden lg:my-auto">
         <Hero
           activeImageIndex={activeImageIndex}
           onSelectImage={handleSelectImage}

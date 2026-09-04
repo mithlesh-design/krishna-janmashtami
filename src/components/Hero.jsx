@@ -54,7 +54,7 @@ export default function Hero({
   };
 
   return (
-    <section className="relative min-h-[100dvh] lg:min-h-screen w-full flex flex-col justify-between lg:flex-row lg:items-center lg:justify-center pt-20 pb-4 sm:pt-22 sm:pb-6 lg:pt-24 lg:pb-12 px-3 sm:px-6 lg:px-16 z-10 select-none">
+    <section className="relative h-full w-full flex flex-col justify-between lg:flex-row lg:items-center lg:justify-center pt-16 pb-2.5 sm:pt-20 sm:pb-4 lg:pt-24 lg:pb-12 px-3 sm:px-6 lg:px-16 z-10 select-none overflow-hidden">
       
       {/* =========================================================================
           1. MOBILE EXPERIENCE (< 1024px)
@@ -64,12 +64,13 @@ export default function Hero({
           - High-contrast, radiant white-to-gold typography with clean subtle shadow
           - Minimal compact music player strip docked at the bottom
           - Image-switching carousel controls completely removed on mobile
+          - Strict single-screen viewport: NO vertical scrolling
           ========================================================================= */}
       {!isDesktop ? (
-        <div className="flex flex-col justify-between h-full min-h-[calc(100dvh-6rem)] w-full max-w-sm sm:max-w-md mx-auto">
+        <div className="flex flex-col justify-between h-full w-full max-w-sm sm:max-w-md mx-auto overflow-hidden">
           
           {/* A. TOP GREETING (Positioned high up in the sky/garland area, away from Krishna's face) */}
-          <div className="text-center space-y-1.5 w-full px-3 pt-1">
+          <div className="text-center space-y-1 w-full px-3 pt-0.5 shrink-0">
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-[#F4B942]/30 bg-[#07182E]/65 backdrop-blur-md shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#F4B942]" />
               <span className="text-[11px] font-bold text-[#FDE68A] font-serif-dev tracking-wider">
@@ -87,10 +88,10 @@ export default function Hero({
           </div>
 
           {/* B. MIDDLE OPEN CLEARANCE: Lord Krishna's Face, Crown, & Darshan 100% Unobstructed */}
-          <div className="flex-1 w-full min-h-[42vh] sm:min-h-[46vh] pointer-events-none" />
+          <div className="flex-1 w-full min-h-0 pointer-events-none" />
 
           {/* C. BOTTOM MINIMAL MUSIC PLAYER STRIP */}
-          <div className="w-full mx-auto pb-1 px-1">
+          <div className="w-full mx-auto pb-1 px-1 shrink-0 relative">
             <MusicPlayer
               tracks={tracks}
               currentIndex={currentTrackIndex}

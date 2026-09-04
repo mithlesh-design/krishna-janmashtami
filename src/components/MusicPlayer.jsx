@@ -326,9 +326,9 @@ export default function MusicPlayer({
             ========================================================================= */
         <div className="w-full relative z-20">
           
-          {/* A. Collapsible Track List Drawer (Smoothly opens upward above the strip) */}
+          {/* A. Collapsible Track List Drawer (Floats upward above the strip without affecting document flow) */}
           {showTrackList && (
-            <div className="mb-2 p-2 rounded-2xl bg-[#07182E]/95 backdrop-blur-2xl border border-white/20 shadow-2xl max-h-56 overflow-y-auto space-y-1 custom-scrollbar text-left">
+            <div className="absolute bottom-full mb-2 left-0 right-0 p-2 rounded-2xl bg-[#07182E]/95 backdrop-blur-2xl border border-white/20 shadow-2xl max-h-56 overflow-y-auto space-y-1 custom-scrollbar text-left z-30">
               <div className="flex items-center justify-between px-2 py-1 border-b border-white/10 text-[11px] text-[#FDE68A] font-semibold">
                 <span>कृष्ण भजन रस • {tracks.length} Songs</span>
                 <button
@@ -364,9 +364,9 @@ export default function MusicPlayer({
             </div>
           )}
 
-          {/* B. Collapsible Video Window (Smoothly opens upward above the strip) */}
+          {/* B. Collapsible Video Window (Floats upward above the strip without affecting document flow) */}
           {showVideo && (
-            <div className="mb-2 w-full aspect-video rounded-2xl overflow-hidden border border-[#F4B942]/40 shadow-2xl bg-black">
+            <div className="absolute bottom-full mb-2 left-0 right-0 w-full aspect-video rounded-2xl overflow-hidden border border-[#F4B942]/40 shadow-2xl bg-black z-30">
               <div id="yt-player-embed" className="w-full h-full" />
             </div>
           )}
